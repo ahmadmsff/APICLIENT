@@ -1,8 +1,6 @@
 package com.ahmadmsff.apiclient.Adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ahmadmsff.apiclient.Model.Barang;
-import com.ahmadmsff.apiclient.Model.GetBarang;
 import com.ahmadmsff.apiclient.R;
 
 import java.util.List;
