@@ -1,36 +1,45 @@
 package com.ahmadmsff.apiclient.Model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Barang {
     @SerializedName("id_barang")
-    private int id_barang;
+    @Expose
+    private Integer idBarang;
     @SerializedName("nama_barang")
-    private String nama_barang;
+    @Expose
+    private String namaBarang;
     @SerializedName("harga")
-    private int harga;
+    @Expose
+    private Integer harga;
+    @SerializedName("image")
+    @Expose
+    private String image_barang;
 
-    public int getId_barang() {
-        return id_barang;
+    public Integer getIdBarang() {
+        return idBarang;
     }
 
-    public void setId_barang(int id_barang) {
-        this.id_barang = id_barang;
+    public void setIdBarang(Integer idBarang) {
+        this.idBarang = idBarang;
     }
 
-    public String getNama_barang() {
-        return nama_barang;
+    public String getNamaBarang() {
+        return namaBarang;
     }
 
-    public void setNama_barang(String nama_barang) {
-        this.nama_barang = nama_barang;
+    public void setNamaBarang(String namaBarang) {
+        this.namaBarang = namaBarang;
     }
 
-    public int getHarga() {
-        return harga;
-    }
+    public Integer getHarga() {return harga;}
 
-    public void setHarga(int harga) {
+    public void setHarga(Integer harga) {
         this.harga = harga;
     }
+
+    public String getImage_barang() {return image_barang;}
+
+    public void setImage_barang(String image_barang) {this.image_barang = image_barang;}
 }
