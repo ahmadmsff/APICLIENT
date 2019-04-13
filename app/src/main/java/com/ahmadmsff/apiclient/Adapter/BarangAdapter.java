@@ -1,7 +1,10 @@
 package com.ahmadmsff.apiclient.Adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ahmadmsff.apiclient.APIHelper.BaseAPIServices;
+import com.ahmadmsff.apiclient.EditActivity;
 import com.ahmadmsff.apiclient.Model.Barang;
+import com.ahmadmsff.apiclient.Model.EditBarang;
 import com.ahmadmsff.apiclient.R;
 import com.bumptech.glide.Glide;
 
@@ -92,49 +97,65 @@ public class BarangAdapter extends RecyclerView.Adapter<BarangAdapter.MyViewHold
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_edit:
-                                Toast.makeText(context, "Menu  edit " + nama + " clicked", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(context, EditActivity.class);
+                                intent.putExtra("id_barang", id.toString());
+                                intent.putExtra("nama_barang", nama);
+                                intent.putExtra("harga", harga.toString());
+                                context.startActivity(intent);
                                 break;
                             case R.id.menu_delete:
 
-                                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-                                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-                                OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-                                Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl("http://192.168.100.2:45455/api/")
-                                        .addConverterFactory(GsonConverterFactory.create())
-                                        .client(client)
-                                        .build();
+                                AlertDialog.Builder alertbox = new AlertDialog.Builder(v.getRootView().getContext());
+                                alertbox.setMessage("Yakin ingin menghapus barang " + nama.toString() + "?");
+                                alertbox.setTitle("Confirmation");
+                                alertbox.setIcon(R.drawable.ic_warning);
 
-                                BaseAPIServices baseAPIServices = retrofit.create(BaseAPIServices.class);
-                                Call<ResponseBody> call = baseAPIServices.deleteBarang(id);
-                                call.enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        if (response.isSuccessful()) {
-                                            try {
-                                                String result = response.body().string();
-                                                JSONObject jsonObject = new JSONObject(result);
-                                                if (jsonObject.getString("status").equals("Success")) {
-                                                    barang.remove(i);
-                                                    notifyDataSetChanged();
-                                                    Toast.makeText(context, "Menu " + nama + " berhasil di hapus", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(context, "Errorrrrr " + response.body().toString(), Toast.LENGTH_SHORT).show();
+                                alertbox.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface arg0, int arg1) {
+                                        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+                                        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+                                        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+                                        Retrofit retrofit = new Retrofit.Builder()
+                                                .baseUrl("http://192.168.100.2:45455/api/")
+                                                .addConverterFactory(GsonConverterFactory.create())
+                                                .client(client)
+                                                .build();
+
+                                        BaseAPIServices baseAPIServices = retrofit.create(BaseAPIServices.class);
+                                        Call<ResponseBody> call = baseAPIServices.deleteBarang(id);
+                                        call.enqueue(new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if (response.isSuccessful()) {
+                                                    try {
+                                                        String result = response.body().string();
+                                                        JSONObject jsonObject = new JSONObject(result);
+                                                        if (jsonObject.getString("status").equals("Success")) {
+                                                            barang.remove(i);
+                                                            notifyDataSetChanged();
+                                                            Toast.makeText(context, "Menu " + nama + " berhasil di hapus", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            Toast.makeText(context, "Errorrrrr " + response.body().toString(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        Log.d("Error", e.toString());
+
+                                                    } catch (IOException e) {
+                                                        Log.e("Error", e.toString());
+                                                    }
                                                 }
-                                            } catch (JSONException e) {
-                                                Log.d("Error", e.toString());
-
-                                            } catch (IOException e) {
-                                                Log.e("Error", e.toString());
                                             }
-                                        }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        Log.d("MENU", "Gagal dihapus " + t.toString());
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                Log.d("MENU", "Gagal dihapus " + t.toString());
+                                            }
+                                        });
                                     }
                                 });
+                                alertbox.setNegativeButton("No", null).show();
+
+
                                 break;
                         }
                         return false;

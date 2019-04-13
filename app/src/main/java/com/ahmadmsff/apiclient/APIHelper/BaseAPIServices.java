@@ -2,6 +2,7 @@ package com.ahmadmsff.apiclient.APIHelper;
 
 import com.ahmadmsff.apiclient.Model.AddBarang;
 import com.ahmadmsff.apiclient.Model.Barang;
+import com.ahmadmsff.apiclient.Model.EditBarang;
 
 import java.util.List;
 
@@ -21,6 +22,10 @@ public interface BaseAPIServices {
 
     @GET("values")
     Call<List<Barang>> getBarang();
+
+    @PUT("values/{id}")
+    Call<ResponseBody> editBarang(@Path("id") Integer id,
+                                  @Body EditBarang body);
 
     @DELETE("values/{id}")
     Call<ResponseBody> deleteBarang(@Path("id") Integer id);
