@@ -76,7 +76,7 @@ public class AddActivity extends AppCompatActivity {
 
         BaseAPIServices baseAPIServices = retrofit.create(BaseAPIServices.class);
 
-        Call<ResponseBody> call = baseAPIServices.addBarang(new AddBarang(nama_barang.getText().toString(), Integer.parseInt(harga_barang.getText().toString())));
+        Call<ResponseBody> call = baseAPIServices.addBarang(new AddBarang(nama_barang.getText().toString(), Integer.parseInt(harga_barang.getText().toString()), "Images/1.jpg"));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
